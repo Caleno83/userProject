@@ -7,9 +7,9 @@ const { validatePlantsId } = require("../middleware/plants")
 const router = express.Router()
 
 // to get all projects
-router.get("/plants", async (req, res, next) => {
+router.get("/plants/:user_id", async (req, res, next) => {
 	try {
-		const plants = await db.getPlants()
+		const plants = await db.getPlants(req.params.user_id)
 		res.json(plants)
 	} catch(err) {
 		next(err)
