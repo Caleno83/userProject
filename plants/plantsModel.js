@@ -4,7 +4,9 @@ const db = require('../data/config');
 
 // to get projects with resource
 function getPlants() {
-return db('plants')
+return db('plants as p')
+.select("p.*")
+.where("user_id", id)
 }
 
 // to get a specific project by id
