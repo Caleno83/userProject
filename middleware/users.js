@@ -8,7 +8,7 @@ function restrict() {
             message: "You Shall Not Pass"
         }
         try {
-            const token = req.header.authorization
+            const token = req.headers.authorization
             if (!token) {
                 return res.status(401).json(authError)
             }
