@@ -64,10 +64,11 @@ router.post("/login", async (req, res, next) => {
 		}, process.env.JWT_SECRET)
 
 
+        res.cookie("token", token)
+        
 		res.json({
             message: `Welcome ${user.username}!`,
-            token,
-            user_id: user.id
+
 		})
 	} catch(err) {
 		next(err)
