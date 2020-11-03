@@ -25,7 +25,7 @@ router.get("/users/:user_id/plants/:id", validatePlantsId(), (req, res) => {
 
 
 // request to add a new action
-router.post("/plants",restrict(), async (req, res, next) => {
+router.post("/plants", async (req, res, next) => {
 	try {
    
 	   const projects = await db.insert(req.body);
