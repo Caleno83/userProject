@@ -1,12 +1,15 @@
 const db = require("../data/config")
 
+// add a user to register
 async function add(user) {
 	const [id] = await db("users").insert(user)
 	return findById(id)
 }
 
+
+//find all users
 function find() {
-    return db("users").select("id", "username", "phoneNumber").orderBy("id")
+    return db("users").select("id", "username", "password", "phoneNumber").orderBy("id")
 }
 
 // function find() {
@@ -15,24 +18,42 @@ function find() {
 // 		.select("u.id", "u.username", "d.name as department")
 // }
 
+
+//find user
 function findBy(filter) {
 	return db("users as u")
-		.select("id", "username", "password")
+		.select("id", "username", "password", "phoneNumber")
 		.where(filter)
 }
 
-
+//find specifci user
 function findById(id) {
 	return db("users")
-		.select("id", "username")
+		.select("id", "username", "phoneNumber")
 		.where({ id })
 		.first()
 }
 
+
+//update user
+function update(id, changes) {
+	return db("users")
+	  .where("id", id)
+	  .update(changes)
+	  .then(count => (count > 0 ? findById(id) : null));
+  }
+  
+
+  // delete a user
+  function remove(id) {
+	return db('users').where({ id }).del();
+  }
 
 module.exports = {
     add,
     find,
     findBy,
 	findById,
+	update, 
+	remove
 }

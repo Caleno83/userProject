@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken")
+const db = require("../users/userModel")
 
 
 function restrict() {
@@ -29,6 +30,29 @@ function restrict() {
     }
 }
 
+function validateUsersId() {
+    return async (req, res, next) => {
+      try {
+        const users = await db.findById(req.params.id);
+  
+        if (users) {
+          req.users = users;
+          next();
+        } else {
+          res.status(404).json({
+            message: "Invalid users id",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({
+          message: "Error retrieving the users",
+        });
+      }
+    };
+  }
+
 module.exports = {
-	restrict,
+    restrict,
+    validateUsersId
 }

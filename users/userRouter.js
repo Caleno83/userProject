@@ -2,7 +2,7 @@ const express = require("express")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const db = require("./userModel")
-const { restrict } = require("../middleware/users")
+const { restrict, validateUsersId } = require("../middleware/users")
 
 const router = express.Router()
 
@@ -12,6 +12,22 @@ router.get("/users", restrict(), async (req, res, next) => {
 	} catch(err) {
 		next(err)
 	}
+})
+
+//specific user
+router.get("/users/:id", async(req,res,next)=>{
+    try {
+        const user = await db.findById(req.params.id)
+        if(!user){
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
+        res.json(user)
+
+    }catch(err){
+        next(err)
+    }
 })
 
 router.post("/register", async (req, res, next) => {
@@ -76,6 +92,45 @@ router.post("/login", async (req, res, next) => {
 		next(err)
 	}
 })
+
+//update user
+
+router.put("/users/:id", validateUsersId(), async (req, res, next) => {
+	try {
+	  const users = await db.update(req.params.id, req.body);
+  
+	  if (users) {
+		res.status(200).json(users);
+	  } else {
+		res.status(404).json({
+		  message: "The users could not be found",
+		});
+	  }
+	} catch (error) {
+	  next(error);
+	}
+  });
+
+// remove a user
+
+router.delete('/users/:id', validateUsersId(), async (req, res, next) => {
+	
+	try {
+		const action = await db.remove(req.params.id);
+	
+		if (action > 0) {
+		  res.status(200).json({
+			message: "The user has been erased from this part of the Earth",
+		  });
+		} else {
+		  res.status(404).json({
+			message: "The action could not be found",
+		  });
+		}
+	  } catch (error) {
+		next(error);
+	  }
+	});
 
 // router.get("/logout", async (req, res, next) => {
 // 	try {
