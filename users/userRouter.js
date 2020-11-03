@@ -15,7 +15,7 @@ router.get("/users", restrict(), async (req, res, next) => {
 })
 
 //specific user
-router.get("/users/:id", async(req,res,next)=>{
+router.get("/users/:id", restrict(),async(req,res,next)=>{
     try {
         const user = await db.findById(req.params.id)
         if(!user){
@@ -95,25 +95,46 @@ router.post("/login", async (req, res, next) => {
 
 //update user
 
-router.put("/users/:id", validateUsersId(), async (req, res, next) => {
-	try {
-	  const users = await db.update(req.params.id, req.body);
-  
-	  if (users) {
-		res.status(200).json(users);
-	  } else {
-		res.status(404).json({
-		  message: "The users could not be found",
-		});
-	  }
-	} catch (error) {
-	  next(error);
-	}
-  });
+// router.put("/users/:id", validateUsersId(), async (req, res, next) => {
+// 	try {
+// 	  const users = await db.update(req.params.id, req.body);
+	
+// 	  if (users) {
+// 		res.status(200).json(users);
+// 	  } else {
+// 		res.status(404).json({
+// 		  message: "The users could not be found",
+// 		});
+// 	  }
+// 	} catch (error) {
+// 	  next(error);
+// 	}
+//   });
+
+router.put('/user:id/:id', restrict(), validateUsersId(), async (req, res) => {
+    try {
+        const {username, password, email, phone} = req.body;
+        const {id} =req.params;
+    //     if (!username) {
+    //       res.status(400).json({ message: "Please provide all the required information of the user." })
+    //    }
+        const count = await db.update(id, req.body)
+        .then(user=>{
+          if (user) {
+            res.status(200).json(count)
+          } else {
+            res.status(404).json({ message: "The user with the specified ID does not exist." })
+            }
+          })
+    } catch (error) {
+			  next(error);
+		 	}
+  }
+);
 
 // remove a user
 
-router.delete('/users/:id', validateUsersId(), async (req, res, next) => {
+router.delete('/users/:id', restrict(),validateUsersId(), async (req, res, next) => {
 	
 	try {
 		const action = await db.remove(req.params.id);

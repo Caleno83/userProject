@@ -21,29 +21,33 @@ function find() {
 
 //find user
 function findBy(filter) {
-	return db("users as u")
-		.select("id", "username", "password", "phoneNumber")
+	return db("users")
+		// .select("id", "username", "password", "phoneNumber")
 		.where(filter)
 }
 
 //find specifci user
 function findById(id) {
 	return db("users")
-		.select("id", "username", "password", "phoneNumber")
+		// .select("id", "username", "password", "phoneNumber")
 		.where({ id })
 		.first()
 }
 
 
 //update user
-function update(id, changes) {
-	return db("users")
-	  .where("id", id)
-	  .update(changes)
-	  .then(count => (count > 0 ? findById(id) : null));
-  }
-  
+// function update(id, changes) {
+// 	return db('users')
+// 	  .where({ id })
+// 	  .update(changes);
+//   }
 
+
+function update(id, user) {
+	return db('users')
+	  .where('id', Number(id))
+	  .update(user);
+  }
   // delete a user
   function remove(id) {
 	return db('users').where({ id }).del();
