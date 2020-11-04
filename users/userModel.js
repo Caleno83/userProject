@@ -36,18 +36,20 @@ function findById(id) {
 
 
 //update user
-// function update(id, changes) {
+//  function update(id, changes) {
 // 	return db('users')
 // 	  .where({ id })
 // 	  .update(changes);
 //   }
 
 
-function update(id, user) {
+  function update(id, changes) {
 	return db('users')
-	  .where('id', Number(id))
-	  .update(user);
-  }
+	  .where({ id })
+	  .update(changes)
+	  .then(count => (count > 0 ? findById(id) : null));
+}
+  
   // delete a user
   function remove(id) {
 	return db('users').where({ id }).del();

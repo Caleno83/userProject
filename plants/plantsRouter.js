@@ -8,7 +8,7 @@ const { validatePlantsId } = require("../middleware/plants")
 const router = express.Router()
 
 // to get all projects
-router.get("/users/:user_id/plants", async (req, res, next) => {
+router.get("/users/:user_id/plants", restrict(), async (req, res, next) => {
 	try {
 		const plants = await db.getPlants(req.params.user_id)
 		res.json(plants)
@@ -18,14 +18,14 @@ router.get("/users/:user_id/plants", async (req, res, next) => {
 })
 
 // to get a specific project
-router.get("/users/:user_id/plants/:id", validatePlantsId(), (req, res) => {
+router.get("/users/:user_id/plants/:id", restrict(), validatePlantsId(), (req, res) => {
     res.status(200).json(req.plants);
   });
 
 
 
 // request to add a new action
-router.post("/plants", async (req, res, next) => {
+router.post("/plants",restrict(), async (req, res, next) => {
 	try {
    
 	   const projects = await db.insert(req.body);
@@ -38,7 +38,7 @@ router.post("/plants", async (req, res, next) => {
    
    
    // request to change actions
-   router.put("/plants/:id",  validatePlantsId(), async (req, res, next) => {
+   router.put("/plants/:id",  restrict(), validatePlantsId(), async (req, res, next) => {
 	 try {
 	   const projects = await db.update(req.params.id, req.body);
    
@@ -55,7 +55,7 @@ router.post("/plants", async (req, res, next) => {
    });
    
    // request to change actions 
-   router.delete("/plants/:id", validatePlantsId(), async (req, res, next) => {
+   router.delete("/plants/:id", restrict(), validatePlantsId(), async (req, res, next) => {
 	 try {
 	   const projects = await db.remove(req.params.id);
    

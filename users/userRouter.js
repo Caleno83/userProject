@@ -49,6 +49,8 @@ router.post("/register", async (req, res, next) => {
             phoneNumber,
 		})
 
+		.then(info => {res.status(201).json({message: "Registration Successful", info});})
+
 		res.status(201).json(newUser)
 	} catch(err) {
 		next(err)
@@ -95,42 +97,27 @@ router.post("/login", async (req, res, next) => {
 
 //update user
 
-// router.put("/users/:id", validateUsersId(), async (req, res, next) => {
-// 	try {
-// 	  const users = await db.update(req.params.id, req.body);
+router.put("/users/:id",  restrict(),validateUsersId(), async (req, res, next) => {
+	try {
+		const changes = req.body;
+		if (changes.password) {
+		  changes.password = bcrypt.hashSync(changes.password, 14);
+		}
+	  const users = await db.update(req.params.id, req.body);
 	
-// 	  if (users) {
-// 		res.status(200).json(users);
-// 	  } else {
-// 		res.status(404).json({
-// 		  message: "The users could not be found",
-// 		});
-// 	  }
-// 	} catch (error) {
-// 	  next(error);
-// 	}
-//   });
+	  if (users) {
+		res.status(200).json(users);
+	  } else {
+		res.status(404).json({
+		  message: "The users could not be found",
+		});
+	  }
+	} catch (error) {
+	  next(error);
+	}
+  });
 
-router.put('/user:id/:id', restrict(), validateUsersId(), async (req, res) => {
-    try {
-        const {username, password, email, phone} = req.body;
-        const {id} =req.params;
-    //     if (!username) {
-    //       res.status(400).json({ message: "Please provide all the required information of the user." })
-    //    }
-        const count = await db.update(id, req.body)
-        .then(user=>{
-          if (user) {
-            res.status(200).json(count)
-          } else {
-            res.status(404).json({ message: "The user with the specified ID does not exist." })
-            }
-          })
-    } catch (error) {
-			  next(error);
-		 	}
-  }
-);
+
 
 // remove a user
 
