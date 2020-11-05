@@ -7,7 +7,7 @@ const { validatePlantsId } = require("../middleware/plants")
 
 const router = express.Router()
 
-// to get all projects
+// to get all plants of specific id
 router.get("/users/:user_id/plants", restrict(), async (req, res, next) => {
 	try {
 		const plants = await db.getPlants(req.params.user_id)
@@ -17,7 +17,7 @@ router.get("/users/:user_id/plants", restrict(), async (req, res, next) => {
 	}
 })
 
-// to get a specific project
+// to get a specific plan of id
 router.get("/users/:user_id/plants/:id", restrict(), validatePlantsId(), (req, res) => {
     res.status(200).json(req.plants);
   });
